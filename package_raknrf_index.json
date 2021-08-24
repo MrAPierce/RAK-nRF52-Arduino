@@ -13,7 +13,7 @@
 				{
 					"name": "RAKwireless nRF Boards",
 					"architecture": "nrf52",
-					"version": "pyh",
+					"version": "0.24.1",
 					"category": "Contributed",
 					"url": "https://github.com/MrAPierce/RAK-nRF52-Arduino/archive/refs/tags/phy.tar.gz?raw=true",
 					"archiveFileName": "pyh.tar.gz",
