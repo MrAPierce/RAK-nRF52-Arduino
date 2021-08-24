@@ -227,6 +227,7 @@ void AdafruitBluefruit::configPrphBandwidth(uint8_t bw)
   /* Note default value from SoftDevice are
    * MTU = 23, Event Len = 3, HVN QSize = 1, WrCMD QSize =1
    */
+
   switch (bw)
   {
     case BANDWIDTH_LOW:
@@ -278,6 +279,41 @@ void AdafruitBluefruit::configCentralBandwidth(uint8_t bw)
 
     default: break;
   }
+}
+
+bool AdafruitBluefruit::setPhy(int8_t phy)
+{
+#if defined(NRF52832_XXAA)
+int8_t const accepted[] = { BLE_GAP_PHY_AUTO, BLE_GAP_PHY_1MBPS, BLE_GAP_PHY_2MBPS };
+#elif defined( NRF52840_XXAA)
+int8_t const accepted[] = { BLE_GAP_PHY_AUTO, BLE_GAP_PHY_1MBPS, BLE_GAP_PHY_2MBPS,
+                            BLE_GAP_PHY_CODED };
+#endif
+
+  // Check if phy is valid value
+  uint32_t i;
+  for (i=0; i<sizeof(accepted); i++)
+  {
+    if (accepted[i] == phy) break;
+  }
+  VERIFY(i < sizeof(accepted));
+
+  // Apply if connected
+  ble_gap_phys_t phys;
+  phys.tx_phys = phy;
+  phys.rx_phys = phy;
+  if ( _conn_hdl != BLE_CONN_HANDLE_INVALID )
+  {
+    VERIFY_STATUS( sd_ble_gap_phy_update(_conn_hdl, &phys), false );
+  }
+  _phy = phy;
+
+  return true;
+}
+
+int8_t AdafruitBluefruit::getPhy(void)
+{
+  return _phy;
 }
 
 bool AdafruitBluefruit::begin(uint8_t prph_count, uint8_t central_count)

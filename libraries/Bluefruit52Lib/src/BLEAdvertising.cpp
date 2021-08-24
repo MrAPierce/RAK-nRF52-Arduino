@@ -277,6 +277,13 @@ void BLEAdvertising::setType(uint8_t adv_type)
   _type = adv_type;
 }
 
+void BLEAdvertising::setPhys(uint8_t primaryPhy, uint8_t secondaryPhy)
+{
+  _phyPrimary = primaryPhy;
+  _phySecondary = secondaryPhy;
+}
+
+
 /**
  * Set Interval in unit of 0.625 ms
  * @param fast  Interval that is used in the first n seconds (configurable)
@@ -349,8 +356,8 @@ bool BLEAdvertising::_start(uint16_t interval, uint16_t timeout)
     .channel_mask  = { 0, 0, 0, 0, 0 }        , // 40 channel, set 1 to disable
     .filter_policy = BLE_GAP_ADV_FP_ANY       ,
 
-    .primary_phy   = BLE_GAP_PHY_AUTO         , // 1 Mbps will be used
-    .secondary_phy = BLE_GAP_PHY_AUTO         , // 1 Mbps will be used
+    .primary_phy   = _phyPrimary         , // 1 Mbps will be used
+    .secondary_phy = _phySecondary         , // 1 Mbps will be used
       // , .set_id, .scan_req_notification
   };
 

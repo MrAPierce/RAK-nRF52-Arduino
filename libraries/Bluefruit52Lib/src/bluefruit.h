@@ -132,7 +132,8 @@ class AdafruitBluefruit
     void configCentralConn     (uint16_t mtu_max, uint16_t event_len, uint8_t hvn_qsize, uint8_t wrcmd_qsize);
     void configPrphBandwidth   (uint8_t bw);
     void configCentralBandwidth(uint8_t bw);
-
+    bool     setPhy             (int8_t phy);
+    int8_t   getPhy             (void);
     bool begin(uint8_t prph_count = 1, uint8_t central_count = 0);
 
     /*------------------------------------------------------------------*/
@@ -237,6 +238,8 @@ class AdafruitBluefruit
     bool _led_conn;
 
     uint16_t _conn_hdl;
+
+    int8_t _phy;
 
     BLEConnection* _connection[BLE_MAX_CONNECTION];
 

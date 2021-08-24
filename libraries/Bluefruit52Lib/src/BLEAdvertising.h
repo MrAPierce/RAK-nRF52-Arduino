@@ -108,7 +108,6 @@ public:
   uint8_t* getData(void);
   bool     setData(const uint8_t* data, uint8_t count);
   void     clearData(void);
-
   bool     setData(Advertisable& adv_able) { return adv_able.setAdv(*this); }
 };
 
@@ -121,6 +120,7 @@ public:
   BLEAdvertising(void);
 
   void setType(uint8_t adv_type);
+  void setPhys(uint8_t primaryPhy, uint8_t secondaryPhy);
   void setFastTimeout(uint16_t sec);
 
   void setSlowCallback(slow_callback_t fp);
@@ -150,6 +150,8 @@ public:
 private:
   uint8_t  _hdl;
   uint8_t  _type;
+  uint8_t  _phyPrimary;
+  uint8_t  _phySecondary;
   bool     _start_if_disconnect;
   bool     _runnning;
 
