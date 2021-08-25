@@ -17,7 +17,7 @@
 					"version": "0.21.21",
 					"category": "Contributed",
 					"url": "https://github.com/MrAPierce/RAK-nRF52-Arduino/archive/refs/tags/phy.tar.gz?raw=true",
-					"archiveFileName": "RAK-nRF52-Arduino-0.21.20.tar.gz",
+					"archiveFileName": "phy.tar.gz",
 					"checksum": "SHA-256:F615798386BB4218535416C296B6591B6452CBAEB22BE003F13DB29D336AC360",
 					"size": "18990376",
 					"boards": [
