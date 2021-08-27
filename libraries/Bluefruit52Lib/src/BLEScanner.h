@@ -54,6 +54,8 @@ public:
   bool isRunning(void);
 
   void useActiveScan(bool enable);
+  void useExtendedAdvScan(bool enable);
+  void usePhy(uint8_t phy);
   void setInterval(uint16_t interval, uint16_t window);
   void setIntervalMS(uint16_t interval, uint16_t window);
   void restartOnDisconnect(bool enable);
@@ -104,6 +106,8 @@ private:
 
   bool       _runnning;
   bool       _start_if_disconnect;
+  bool       _useExtended;
+  uint8_t    _scanPhy;
 
   int8_t     _filter_rssi;
   bool       _filter_msd_en; // since all value of manufacturer id is valid (0-FFFF)

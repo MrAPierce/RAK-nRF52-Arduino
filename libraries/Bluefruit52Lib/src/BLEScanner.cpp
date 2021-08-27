@@ -75,6 +75,16 @@ void BLEScanner::useActiveScan(bool enable)
   _param.active = enable;
 }
 
+void BLEScanner::useExtendedAdvScan(bool enable)
+{
+  _param.extended = enable;
+}
+
+void BLEScanner::usePhy(uint8_t phy) 
+{
+  _param.scan_phys = phy;
+}
+
 void BLEScanner::setInterval(uint16_t interval, uint16_t window)
 {
   _param.interval = interval;
