@@ -284,6 +284,11 @@ void BLEAdvertising::setPhys(uint8_t primaryPhy, uint8_t secondaryPhy)
 }
 
 
+void BLEAdvertising::scanRequestNotification(bool enabled)
+{
+  _scanRequestNotify = enabled;
+}
+
 /**
  * Set Interval in unit of 0.625 ms
  * @param fast  Interval that is used in the first n seconds (configurable)
@@ -322,6 +327,11 @@ void BLEAdvertising::setStopCallback(stop_callback_t fp)
   _stop_cb = fp;
 }
 
+void BLEAdvertising::setScanCallback(scanRequest_callback_t fp )
+{
+  _scanRequest_cb = fp;
+}
+
 bool BLEAdvertising::isRunning(void)
 {
   return _runnning;
@@ -347,18 +357,19 @@ bool BLEAdvertising::_start(uint16_t interval, uint16_t timeout)
   // ADV Params
   ble_gap_adv_params_t adv_para =
   {
-    .properties    = { .type = _type, .anonymous  = 0 },
-    .p_peer_addr   = NULL                     , // Undirected advertisement
-    .interval      = interval                 , // advertising interval (in units of 0.625 ms)
-    .duration      = (uint16_t) (timeout*100) , // in 10-ms unit
+    .properties            = { .type = _type, .anonymous  = 0 },
+    .p_peer_addr           = NULL                     , // Undirected advertisement
+    .interval              = interval                 , // advertising interval (in units of 0.625 ms)
+    .duration              = (uint16_t) (timeout*100) , // in 10-ms unit
 
-    .max_adv_evts  = 0                        , // TODO can be used for fast/slow mode
-    .channel_mask  = { 0, 0, 0, 0, 0 }        , // 40 channel, set 1 to disable
-    .filter_policy = BLE_GAP_ADV_FP_ANY       ,
+    .max_adv_evts          = 0                        , // TODO can be used for fast/slow mode
+    .channel_mask          = { 0, 0, 0, 0, 0 }        , // 40 channel, set 1 to disable
+    .filter_policy         = BLE_GAP_ADV_FP_ANY       ,
 
-    .primary_phy   = _phyPrimary         , // 1 Mbps will be used
-    .secondary_phy = _phySecondary         , // 1 Mbps will be used
-      // , .set_id, .scan_req_notification
+    .primary_phy           = _phyPrimary              , // By default 1 Mbps will be used
+    .secondary_phy         = _phySecondary            , // By default 1 Mbps will be used
+    .scan_req_notification = _scanRequestNotify
+      // , .set_id
   };
 
   // gap_adv long-live is required by SD v6
@@ -432,6 +443,7 @@ void BLEAdvertising::_eventHandler(ble_evt_t* evt)
         if ( !_runnning && _start_if_disconnect ) start(_stop_timeout);
       }
     break;
+    
 
     case BLE_GAP_EVT_ADV_SET_TERMINATED:
       if (evt->evt.gap_evt.params.adv_set_terminated.reason == BLE_GAP_EVT_ADV_SET_TERMINATED_REASON_TIMEOUT)
@@ -467,6 +479,16 @@ void BLEAdvertising::_eventHandler(ble_evt_t* evt)
           }
         }
       }
+    break;
+
+    case BLE_GAP_EVT_SCAN_REQ_REPORT:
+      
+      if (_scanRequest_cb) 
+      {
+        ble_gap_evt_scan_req_report_t* report = &evt->evt.gap_evt.params.scan_req_report;
+        ada_callback(report, 0, _scanRequest_cb);
+      }
+      
     break;
 
     default: break;

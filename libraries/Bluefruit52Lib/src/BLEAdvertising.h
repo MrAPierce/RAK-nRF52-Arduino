@@ -116,15 +116,19 @@ class BLEAdvertising : public BLEAdvertisingData
 public:
   typedef void (*stop_callback_t) (void);
   typedef void (*slow_callback_t) (void);
+  typedef void (*scanRequest_callback_t) (ble_gap_evt_scan_req_report_t*);
 
   BLEAdvertising(void);
 
   void setType(uint8_t adv_type);
+  void scanRequestNotification(bool enabled);
   void setPhys(uint8_t primaryPhy, uint8_t secondaryPhy);
   void setFastTimeout(uint16_t sec);
 
   void setSlowCallback(slow_callback_t fp);
   void setStopCallback(stop_callback_t fp);
+
+  void setScanCallback(scanRequest_callback_t fp);
 
   void setInterval  (uint16_t fast, uint16_t slow);
   void setIntervalMS(uint16_t fast, uint16_t slow);
@@ -152,6 +156,7 @@ private:
   uint8_t  _type;
   uint8_t  _phyPrimary;
   uint8_t  _phySecondary;
+  bool     _scanRequestNotify;
   bool     _start_if_disconnect;
   bool     _runnning;
 
@@ -167,6 +172,7 @@ private:
 
   stop_callback_t _stop_cb;
   slow_callback_t _slow_cb;
+  scanRequest_callback_t _scanRequest_cb;
 
   // Internal function
   bool _start(uint16_t interval, uint16_t timeout);
